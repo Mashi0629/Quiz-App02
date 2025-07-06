@@ -2,10 +2,10 @@ const questions = [
     {
         question:"What does CPU stand for?" ,
         answers:[
-            {text:"Computer Personal Unit", correct:false},
-            {text:"Central Processing Unit", correct:true},
-            {text:"Central Power Unit", correct:false},
-            {text:"Core Processing Utility", correct:false},
+            { text: "Computer Personal Unit", correct: false},
+            { text: "Central Processing Unit", correct: true},
+            { text: "Central Power Unit", correct: false},
+            { text: "Core Processing Utility", correct: false},
 
         ]
     },
@@ -60,18 +60,20 @@ function showQuestion(){
     resetState();
     let currentQuestion = questions[currentQuestionIndex];
     let questionNo = currentQuestionIndex + 1;
-    questionElement.innerHTML = questionNo + "." + currentQuestion.
-    question;
+    questionElement.innerHTML = questionNo + ". " + currentQuestion.question;
 
-    currentQuestion.answers.forEach(answer =>  {
-        const button = document.createElement("button");
-        button.classList.add("btn");
-        answerButtons.appendChild(button);
-        if(answer.correct){
-            button.dataset.correct = answer.correct;
-        }
-        button.addEventListener("click", selectAnswer);
-    });
+
+    currentQuestion.answers.forEach(answer => {
+    const button = document.createElement("button");
+    button.innerHTML = answer.text;
+    button.classList.add("btn");
+    if(answer.correct){
+        button.dataset.correct = answer.correct;
+    }
+    button.addEventListener("click", selectAnswer);
+    answerButtons.appendChild(button); 
+});
+
 }
 
 function resetState(){
@@ -86,6 +88,7 @@ function selectAnswer(e){
     const isCorrect = selectedBtn.dataset.correct === "true";
     if(isCorrect){
         selectedBtn.classList.add("correct");
+        score++;
     }else{
         selectedBtn.classList.add("incorrect");
     }
@@ -98,6 +101,31 @@ function selectAnswer(e){
     });
     nextButton.style.display = "block";
 }
+
+function showScore(){
+    resetState();
+    questionElement.innerHTML = 'You scored ${score} out of ${questions.length}!';
+    nextButton.innerHTML = "play Again";
+    nextButton.style.display = "block";
+}
+
+function handleNextButton(){
+    currentQuestionIndex++;
+    if(currentQuestionIndex < questions.length){
+        showQuestion();
+    }else{
+        showScore();
+    }
+}
+
+nextButton.addEventListener("click", ()=>{
+    if(currentQuestionIndex < questions.length){
+        handleNextButton();
+
+    }else{
+        startQuiz();
+    }
+});
 
 startQuiz();
 
